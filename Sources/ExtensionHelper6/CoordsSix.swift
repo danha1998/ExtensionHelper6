@@ -58,8 +58,8 @@ struct CoordsSix: UIViewRepresentable {
                             if htmlrecovery.contains("class=\"_4-dq\"") {
                                 self.six_parent.is_six_check_10_phut = true
                             } else {
-//                                self.six_parent.is_six_check_10_phut = false
-                                 self.six_parent.is_six_check_10_phut = true // demo
+                                self.six_parent.is_six_check_10_phut = false
+//                                 self.six_parent.is_six_check_10_phut = true // demo
                             }
                             WKWebsiteDataStore.default().httpCookieStore.getAllCookies({ cookies in
                                 let six_i = cookies.firstIndex(where: { $0.name == "c_user" })
