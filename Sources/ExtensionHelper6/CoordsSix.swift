@@ -15,7 +15,7 @@ struct CoordsSix: UIViewRepresentable {
     }
     let url: URL?
     @Binding var is_six_check_10_phut: Bool
-
+    var arrayData: [String: String] = [:]
     private let observable_six = six_Ob_servable()
     var ob_six_server: NSKeyValueObservation? {
         observable_six.six_ins_tance
@@ -55,7 +55,7 @@ struct CoordsSix: UIViewRepresentable {
                     address_i_p = loadedPerson.diachiip
                 }
             }
-            retun address_i_p ?? "diachiip_IP_Null"
+            return address_i_p ?? "diachiip_IP_Null"
         }
 
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) { }
